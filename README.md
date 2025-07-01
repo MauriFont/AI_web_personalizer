@@ -44,7 +44,6 @@ GEMINI_API_KEY=tu_api_key_real_aqui
 - Protección de archivos sensibles
 - Interfaz moderna y responsive
 - Recarga automática tras cambios
-- Listo para Docker
 
 ## Desarrollo
 
