@@ -78,12 +78,6 @@ HOST=0.0.0.0                      # Host
 LOG_LEVEL=INFO                    # Nivel de log
 ```
 
-## Despliegue con Docker
-
-```bash
-docker-compose up --build
-```
-
 ## Seguridad
 
 - El archivo `.env` está en `.gitignore` y no se sube a GitHub
