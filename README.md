@@ -1,6 +1,6 @@
 # Web Personalizer - Personalización HTML y CSS con IA
 
-Un servidor web en la que el usuario puede modificar la apariencia de las paginas HTML con instrucciones en lenguaje natural usando IA.
+Un servidor web en el que el usuario puede modificar la apariencia de las paginas HTML con instrucciones en lenguaje natural usando IA.
 
 ## Configuración
 
