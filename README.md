@@ -1,6 +1,6 @@
-# Web Personalizer - Personalización HTML con IA
+# Web Personalizer - Personalización HTML y CSS con IA
 
-Una aplicación web que permite personalizar páginas HTML usando inteligencia artificial (Google Gemini).
+Un servidor web en la que el usuario puede modificar la apariencia de las paginas HTML con instrucciones en lenguaje natural usando IA.
 
 ## Configuración
 
