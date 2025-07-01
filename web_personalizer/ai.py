@@ -24,17 +24,22 @@ Version: 1.4.0
 """
 import json
 import logging
+import os
 from google import genai
 from pydantic import BaseModel
 import enum
 from google.genai import types
 
 # Configurar logging con formato mejorado
+log_level = os.getenv('LOG_LEVEL', 'INFO').upper()
 logging.basicConfig(
-    level=logging.INFO,
+    level=getattr(logging, log_level),
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
+
+# Configuración de Gemini desde variables de entorno
+GEMINI_TIMEOUT = int(os.getenv('GEMINI_TIMEOUT', '30'))
 
 def agregar_numeros_linea(html: str) -> str:
     """
@@ -309,6 +314,7 @@ SOLICITUD DE MODIFICACIÓN: {modificacion}
         logger.info("Enviando solicitud a Gemini...")
 
         client = genai.Client()
+        
         response = client.models.generate_content(
             model='gemini-2.5-flash',
             contents=mensaje,
@@ -376,7 +382,7 @@ def aplicar_cambios_parciales(html_original: str, cambios: list) -> str:
             # Validar campos requeridos
             campos_requeridos = ['tipo', 'linea', 'escribir']
             for campo in campos_requeridos:
-                if campo not in cambio or not cambio[campo]:
+                if campo not in cambio:
                     raise HTMLProcessingError(f"Cambio {i+1} está incompleto: falta el campo '{campo}'")
             
             # Para tipo reemplazar, requerir campo 'a_reemplazar'

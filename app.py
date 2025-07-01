@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """
-Aplicación Flask para servir archivos estáticos y API REST
+Aplicación Flask para servir archivos estáticos
 """
 from flask import Flask, request, jsonify, send_from_directory, send_file
 from flask_cors import CORS
+from dotenv import load_dotenv
 import os
 import sys
 import logging
@@ -11,12 +12,24 @@ import uuid
 from pathlib import Path
 from web_personalizer.ai import ejecutar_proceso_completo, HTMLProcessingError, GeminiError
 
+# Cargar variables de entorno desde .env
+load_dotenv()
+
 # Configurar logging
-logging.basicConfig(level=logging.INFO)
+log_level = os.getenv('LOG_LEVEL', 'INFO').upper()
+logging.basicConfig(level=getattr(logging, log_level))
 logger = logging.getLogger(__name__)
 
 # Crear aplicación Flask
 app = Flask(__name__)
+
+# Configurar Flask desde variables de entorno
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-secret-key-change-in-production')
+app.config['MAX_CONTENT_LENGTH'] = int(os.getenv('MAX_CONTENT_LENGTH', '16777216'))  # 16MB por defecto
+
+# Configuración de cookies desde variables de entorno
+COOKIE_SECURE = os.getenv('COOKIE_SECURE', 'false').lower() == 'true'
+COOKIE_MAX_AGE = int(os.getenv('COOKIE_MAX_AGE', '2592000'))  # 30 días por defecto
 
 # Habilitar CORS para todas las rutas
 CORS(app, origins="*", methods=["GET", "POST", "OPTIONS"],
@@ -199,9 +212,9 @@ def personalizar_html():
                 response.set_cookie(
                     key="user_id", 
                     value=user_id, 
-                    max_age=30*24*60*60,  # 30 días
+                    max_age=COOKIE_MAX_AGE,
                     httponly=True,
-                    secure=False  # Cambiar a True en producción con HTTPS
+                    secure=COOKIE_SECURE
                 )
                 
                 return response
@@ -219,9 +232,9 @@ def personalizar_html():
             response.set_cookie(
                 key="user_id", 
                 value=user_id, 
-                max_age=30*24*60*60,  # 30 días
+                max_age=COOKIE_MAX_AGE,
                 httponly=True,
-                secure=False
+                secure=COOKIE_SECURE
             )
             return response
         
@@ -313,28 +326,46 @@ def internal_error(error):
         "error": "Error interno del servidor"
     }), 500
 
-
 if __name__ == "__main__":
+    # Obtener configuración del servidor desde variables de entorno
+    HOST = os.getenv('HOST', '0.0.0.0')
+    PORT = int(os.getenv('PORT', '8000'))
+    FLASK_DEBUG = os.getenv('FLASK_DEBUG', 'true').lower() == 'true'
+    FLASK_ENV = os.getenv('FLASK_ENV', 'development')
+    
     print("=" * 60)
     print("INICIANDO SERVIDOR WEB")
     print("=" * 60)
     print("Directorio actual:", os.getcwd())
+    print(f"Entorno: {FLASK_ENV}")
+    print(f"Debug: {FLASK_DEBUG}")
     print()
-    print("Servidor WEB: http://localhost:8000")
-    print("   Pagina principal: http://localhost:8000/")
-    print("   Archivos estaticos: http://localhost:8000/<archivo>")
-    print("   API Personalizar: http://localhost:8000/personalizar")
+    print(f"Servidor WEB: http://{HOST}:{PORT}")
+    print(f"   Pagina principal: http://{HOST}:{PORT}/")
+    print(f"   Archivos estaticos: http://{HOST}:{PORT}/<archivo>")
+    print(f"   API Personalizar: http://{HOST}:{PORT}/personalizar")
     print()
+    
+    # Verificar API key de Gemini
+    gemini_key = os.getenv('GEMINI_API_KEY')
+    if not gemini_key or gemini_key == 'tu_api_key_de_gemini_aqui':
+        print("⚠️  ADVERTENCIA: API key de Gemini no configurada!")
+        print("   Configúrala en el archivo .env: GEMINI_API_KEY=tu_clave_aqui")
+        print("   Obtén tu clave en: https://makersuite.google.com/app/apikey")
+        print()
+    else:
+        print(f"✅ API key de Gemini configurada: {gemini_key[:10]}...")
+        print()
+    
     print("Para detener el servidor presiona Ctrl+C")
     print("=" * 60)
     
     try:
-        # Importar y ejecutar la aplicación Flask
-        from app import app
+        # Ejecutar la aplicación Flask
         app.run(
-            host='0.0.0.0',
-            port=8000,
-            debug=True,
+            host=HOST,
+            port=PORT,
+            debug=FLASK_DEBUG,
             threaded=True
         )
         
