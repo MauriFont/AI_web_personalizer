@@ -2,9 +2,8 @@
 
 Una aplicación web que permite personalizar páginas HTML usando inteligencia artificial (Google Gemini).
 
-## Configuración Rápida
+## Configuración
 
-### Configuración
 ```bash
 # 1. Copiar archivo de configuración
 cp .env.example .env
