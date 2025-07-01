@@ -4,17 +4,7 @@ Una aplicación web que permite personalizar páginas HTML usando inteligencia a
 
 ## Configuración Rápida
 
-### Método 1: Script Automático (Recomendado)
-```bash
-# Clonar el repositorio
-git clone https://github.com/tu-usuario/tu-repo.git
-cd tu-repo
-
-# Ejecutar script de configuración
-bash setup.sh
-```
-
-### Método 2: Configuración Manual
+### Configuración
 ```bash
 # 1. Copiar archivo de configuración
 cp .env.example .env
@@ -65,7 +55,6 @@ flask/
 ├── app.py              # Aplicación principal
 ├── requirements.txt    # Dependencias Python
 ├── .env.example       # Configuración de ejemplo
-├── setup.sh           # Script de configuración
 ├── web_personalizer/  # Módulos de la aplicación
 │   ├── index.html     # Página principal
 │   ├── script.js      # Frontend JavaScript
