@@ -18,7 +18,7 @@ Excepciones personalizadas:
     - HTMLProcessingError: Errores de procesamiento de HTML
     - FileNotFoundError: Archivos no encontrados
 
-Author: AI Assistant
+Author: Mauricio Fontebasso
 Date: 2025-06-30
 Version: 1.4.0
 """
